@@ -1,5 +1,6 @@
 {
   "deno.enable": true,
   "deno.lint": true,
-  "deno.unstable": true
+  "deno.unstable": true,
+  "editor.fontFamily": "'Geist Mono', Consolas, 'Courier New', monospace"
 }
