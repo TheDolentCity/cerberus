@@ -35,7 +35,7 @@ export async function getRssFeed(feedUrl: string): Promise<FeedData> {
   return feed;
 }
 
-export async function getPosts(
+export async function getNewPostsFromFeed(
   feedUrl: string,
   lastUpdated: number
 ): Promise<Post[]> {
@@ -62,7 +62,7 @@ export async function getPosts(
   return posts;
 }
 
-export async function getAllPosts(
+export async function getAllNewPosts(
   feeds: string[] | null,
   lastUpdated: number
 ): Promise<Post[]> {
@@ -74,7 +74,7 @@ export async function getAllPosts(
     for (let i = 0; i < feeds.length; i++) {
       // Fetch new posts for each feed and add it to the list
       const feed = feeds[i];
-      const newPosts = await getPosts(feed, lastUpdated);
+      const newPosts = await getNewPostsFromFeed(feed, lastUpdated);
       posts = [...posts, ...newPosts];
     }
     logPosts(posts);

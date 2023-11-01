@@ -2,36 +2,6 @@ import { MissingEnvironmentVariableError } from './errors/missing-environment-va
 import { Post } from './types.ts';
 import { consoleLog } from './console.ts';
 
-// export async function getDiscordClient(
-//   env: Record<string, string>
-// ): Promise<Bot> {
-//   const discordToken = env['DISCORD_TOKEN'];
-
-//   if (!discordToken) {
-//     throw new MissingEnvironmentVariableError('DISCORD_TOKEN');
-//   }
-
-//   consoleLog('Creating discord bot...');
-//   const rest = createRestManager({
-//     token: discordToken,
-//   });
-//   rest.sendRequest();
-//   const bot = createBot({
-//     token: discordToken,
-//     intents: Intents.GuildWebhooks | Intents.GuildMessages,
-//     events: {
-//       ready() {
-//         consoleLog('Connected discord bot to gateway...');
-//       },
-//     },
-//   });
-
-//   await startBot(bot);
-//   consoleLog('Created discord bot');
-
-//   return bot;
-// }
-
 export function formatPostAsMessage(post: Post): string {
   let message = '';
   message += `### ${post.publicationTitle} | ${post.postTitle}\n`;

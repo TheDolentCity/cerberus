@@ -5,7 +5,7 @@ import {
   updateLastUpdated,
 } from './redis.ts';
 
-import { getAllPosts } from './feed.ts';
+import { getAllNewPosts } from './feed.ts';
 import { load } from 'https://deno.land/std@0.204.0/dotenv/mod.ts';
 import { postMessages } from './discord.ts';
 
@@ -16,7 +16,7 @@ const feeds = await getFeeds(redis);
 const lastUpdated = (await getLastUpdated(redis)) ?? Date.now();
 
 // Get all new posts
-const posts = await getAllPosts(feeds, lastUpdated);
+const posts = await getAllNewPosts(feeds, lastUpdated);
 
 // Send posts to Discord
 await postMessages(posts, env);
