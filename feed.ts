@@ -9,11 +9,11 @@ import {
 import { FeedNotFoundError } from './errors/feed-not-found-error.ts';
 import { Post } from './types.ts';
 
-function logPosts(posts: Array<Post>) {
+function logPosts(posts: Post[]) {
   consoleNewLine();
   consoleSeparator();
   if (posts && posts.length === 0) {
-    consoleError('No posts found!');
+    consoleLog('No posts found');
   } else {
     posts?.forEach((post) => {
       console.log(`%c@ %c${post?.postTitle}`, 'color: yellow', 'color: white');
@@ -38,17 +38,17 @@ export async function getRssFeed(feedUrl: string): Promise<FeedData> {
 export async function getPosts(
   feedUrl: string,
   lastUpdated: number
-): Promise<Array<Post>> {
+): Promise<Post[]> {
   const feed = await getRssFeed(feedUrl);
-  let posts: Array<Post> = [];
+  let posts: Post[] = [];
 
   // Iterate over entries
   feed?.entries?.forEach((entry) => {
     // Fetch the UTC entry published timestamp or default to 0
-    const utc = entry?.published?.getTime() ?? 0;
+    const utc = new Date(entry?.published ?? 0).getTime();
 
     // Only add the post to the batch if its after the last update
-    if (utc > lastUpdated) {
+    if (utc < lastUpdated) {
       const post: Post = {
         publicationTitle: feed?.title ?? 'Unknown publication',
         postTitle: entry?.title ?? 'Missing title',
@@ -59,7 +59,29 @@ export async function getPosts(
     }
   });
 
-  logPosts(posts);
+  return posts;
+}
+
+export async function getAllPosts(
+  feeds: string[] | null,
+  lastUpdated: number
+): Promise<Post[]> {
+  let posts: Post[] = [];
+
+  if (feeds) {
+    consoleLog(`Retrieving new posts......`);
+    // Iterate over feeds
+    for (let i = 0; i < feeds.length; i++) {
+      // Fetch new posts for each feed and add it to the list
+      const feed = feeds[i];
+      const newPosts = await getPosts(feed, lastUpdated);
+      posts = [...posts, ...newPosts];
+    }
+    logPosts(posts);
+    consoleLog(`Retrieved new posts`);
+  } else {
+    consoleError('Feeds does not exist!');
+  }
 
   return posts;
 }

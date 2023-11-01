@@ -5,26 +5,21 @@ import {
   updateLastUpdated,
 } from './redis.ts';
 
-import { Post } from './types.ts';
-import { Redis } from 'https://deno.land/x/upstash_redis@v1.14.0/mod.ts';
-import { extract } from 'npm:@extractus/feed-extractor';
-import { getPosts } from './feed.ts';
-import { parseFeed } from 'https://deno.land/x/rss/mod.ts';
-import { serve } from 'https://deno.land/std@0.204.0/http/server.ts';
+import { getAllPosts } from './feed.ts';
+import { load } from 'https://deno.land/std@0.204.0/dotenv/mod.ts';
+import { postMessages } from './discord.ts';
 
-// Fetch last update and cached feeds from redis
-const redis = await getRedisClient();
+// Fetch cached feeds and lastUpdated from redis
+const env = await load();
+const redis = getRedisClient(env);
 const feeds = await getFeeds(redis);
 const lastUpdated = (await getLastUpdated(redis)) ?? Date.now();
 
 // Get all new posts
-let posts: Array<Post>;
-feeds?.forEach(async (feed) => {
-  const newPosts = await getPosts(feed, lastUpdated);
-  posts = [...posts, ...newPosts];
-});
+const posts = await getAllPosts(feeds, lastUpdated);
 
-// SEND POSTS TO DISCORD
+// Send posts to Discord
+await postMessages(posts, env);
 
 // Update last updated timestamp (uses Date.now())
 await updateLastUpdated(redis);

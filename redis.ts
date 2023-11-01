@@ -9,7 +9,7 @@ import { MissingEnvironmentVariableError } from './errors/missing-environment-va
 import { Redis } from 'npm:@upstash/redis@1.24.1';
 import { load } from 'https://deno.land/std@0.204.0/dotenv/mod.ts';
 
-function logFeeds(feeds: Array<string>) {
+function logFeeds(feeds: string[]) {
   consoleNewLine();
   consoleSeparator();
   if (feeds && feeds.length === 0) {
@@ -23,11 +23,10 @@ function logFeeds(feeds: Array<string>) {
   consoleNewLine();
 }
 
-export async function getRedisClient(): Promise<Redis> {
+export function getRedisClient(env: Record<string, string>): Redis {
   consoleLog('Connecting to Redis......');
 
   // Get Redis environment variables
-  const env = await load();
   const redisUrl = env['UPSTASH_REDIS_REST_URL'];
   const redisToken = env['UPSTASH_REDIS_REST_TOKEN'];
 
@@ -50,11 +49,11 @@ export async function getRedisClient(): Promise<Redis> {
   return redis;
 }
 
-export async function getFeeds(redis: Redis): Promise<Array<string> | null> {
-  consoleLog('Retrieving feeds......');
-  const feeds: Array<string> | null = await redis.get('feeds');
+export async function getFeeds(redis: Redis): Promise<string[] | null> {
+  consoleLog('Retrieving cached feeds......');
+  const feeds = (await redis.smembers('feeds')) as string[] | null;
   console.log(
-    `%c? %cRetrieved %c${feeds?.length ?? 0} %c feeds`,
+    `%c? %cRetrieved %c${feeds?.length ?? 0} %ccached feeds`,
     'color: blue',
     'color: white',
     'color: yellow',
