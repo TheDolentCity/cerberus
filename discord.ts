@@ -10,8 +10,8 @@ export function formatPostAsMessage(post: Post): string {
   return message;
 }
 
-export async function postMessages(posts: Post[], env: Record<string, string>) {
-  const webhookUrl = env['DISCORD_WEBHOOK_URL'];
+export async function postMessages(posts: Post[]) {
+  const webhookUrl = Deno.env.get('DISCORD_WEBHOOK_URL');
 
   // Error if missing environment variables
   if (!webhookUrl) {
