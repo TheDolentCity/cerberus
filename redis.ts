@@ -22,12 +22,12 @@ function logFeeds(feeds: string[]) {
   consoleNewLine();
 }
 
-export function getRedisClient(env: Record<string, string>): Redis {
+export function getRedisClient(): Redis {
   consoleLog('Connecting to Redis......');
 
   // Get Redis environment variables
-  const redisUrl = env['UPSTASH_REDIS_REST_URL'];
-  const redisToken = env['UPSTASH_REDIS_REST_TOKEN'];
+  const redisUrl = Deno.env.get('UPSTASH_REDIS_REST_URL');
+  const redisToken = Deno.env.get('UPSTASH_REDIS_REST_TOKEN');
 
   // Error if missing environment variables
   if (!redisUrl) {
