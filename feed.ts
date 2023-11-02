@@ -48,7 +48,7 @@ export async function getNewPostsFromFeed(
     const utc = new Date(entry?.published ?? 0).getTime();
 
     // Only add the post to the batch if its after the last update
-    if (utc < lastUpdated) {
+    if (utc > lastUpdated) {
       const post: Post = {
         publicationTitle: feed?.title ?? 'Unknown publication',
         postTitle: entry?.title ?? 'Missing title',
