@@ -25,7 +25,15 @@ function logPosts(posts: Post[]) {
 
 export async function getRssFeed(feedUrl: string): Promise<FeedData> {
   consoleLog(`Retrieving RSS feed (${feedUrl})......`);
-  const feed = await extract(feedUrl);
+  const feed = await extract(feedUrl, {
+    xmlParserOptions: {
+      ignoreAttributes: false,
+      unpairedTags: ['hr', 'br', 'meta'],
+      stopNodes: ['*.pre', '*.script'],
+      processEntities: true,
+      htmlEntities: true,
+    },
+  });
 
   if (!feed) {
     throw new FeedNotFoundError(feedUrl);
