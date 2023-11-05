@@ -14,7 +14,7 @@ export function consoleHeader(log: string) {
 }
 
 export function consoleLog(log: string) {
-  console.log(`%c? %c${log}`, 'color: blue', 'color: white');
+  console.log(`%c? %c${log}`, 'color: blue', 'color: default');
 }
 
 export function consoleError(error: string) {

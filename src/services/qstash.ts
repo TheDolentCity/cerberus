@@ -1,14 +1,16 @@
-import { InvalidAuthorization } from './errors/invalid-authorization.ts';
-import { MissingEnvironmentVariableError } from './errors/missing-environment-variable-error.ts';
+import { Environment } from '../utilities/environment.ts';
+import { InvalidAuthorization } from '../errors/invalid-authorization.ts';
+import { MissingEnvironmentVariableError } from '../errors/missing-environment-variable-error.ts';
 import { Receiver } from 'npm:@upstash/qstash@2.1.9';
-import { consoleLog } from './console.ts';
+import { consoleLog } from '../utilities/console.ts';
 
 export async function validateFromQStash(request: Request) {
   consoleLog('Validating from QStash......');
 
-  // Get Redis environment variables
-  const currentSigningKey = Deno.env.get('QSTASH_CURRENT_SIGNING_KEY');
-  const nextSigningKey = Deno.env.get('QSTASH_NEXT_SIGNING_KEY');
+  // Get Qstash environment variables
+  const environment = await Environment.getInstance();
+  const currentSigningKey = environment.get('QSTASH_CURRENT_SIGNING_KEY');
+  const nextSigningKey = environment.get('QSTASH_NEXT_SIGNING_KEY');
 
   // Error if missing environment variables
   if (!currentSigningKey) {
