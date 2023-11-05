@@ -3,9 +3,10 @@ import {
   consoleLog,
   consoleNewLine,
   consoleSeparator,
-} from './console.ts';
+} from '../utilities/console.ts';
 
-import { MissingEnvironmentVariableError } from './errors/missing-environment-variable-error.ts';
+import { Environment } from '../utilities/environment.ts';
+import { MissingEnvironmentVariableError } from '../errors/missing-environment-variable-error.ts';
 import { Redis } from 'npm:@upstash/redis@1.24.1';
 
 function logFeeds(feeds: string[]) {
@@ -15,19 +16,20 @@ function logFeeds(feeds: string[]) {
     consoleError('No feeds found!');
   } else {
     feeds?.forEach((feed) => {
-      console.log(`%c@ %c${feed}`, 'color: yellow', 'color: white');
+      console.log(`%c@ %c${feed}`, 'color: yellow', 'color: default');
     });
   }
   consoleSeparator();
   consoleNewLine();
 }
 
-export function getRedisClient(): Redis {
+export async function getRedisClient(): Promise<Redis> {
   consoleLog('Connecting to Redis......');
 
   // Get Redis environment variables
-  const redisUrl = Deno.env.get('UPSTASH_REDIS_REST_URL');
-  const redisToken = Deno.env.get('UPSTASH_REDIS_REST_TOKEN');
+  const environment = await Environment.getInstance();
+  const redisUrl = environment.get('UPSTASH_REDIS_REST_URL');
+  const redisToken = environment.get('UPSTASH_REDIS_REST_TOKEN');
 
   // Error if missing environment variables
   if (!redisUrl) {
@@ -54,12 +56,24 @@ export async function getFeeds(redis: Redis): Promise<string[] | null> {
   console.log(
     `%c? %cRetrieved %c${feeds?.length ?? 0} %ccached feeds`,
     'color: blue',
-    'color: white',
+    'color: default',
     'color: yellow',
-    'color: white'
+    'color: default'
   );
   logFeeds(feeds ?? []);
   return feeds;
+}
+
+export async function addFeed(redis: Redis, feed: string) {
+  consoleLog('Updating cached feeds......');
+  await redis.sadd('feeds', feed);
+  consoleLog('Updated cached feeds');
+}
+
+export async function removeFeed(redis: Redis, feed: string) {
+  consoleLog('Removing cached feed......');
+  await redis.srem('feeds', feed);
+  consoleLog('Removed cached feed');
 }
 
 export async function getLastUpdated(redis: Redis): Promise<number | null> {
@@ -70,7 +84,7 @@ export async function getLastUpdated(redis: Redis): Promise<number | null> {
     console.log(
       `%c? %cLast updated at %c${new Date(lastUpdated)}`,
       'color: blue',
-      'color: white',
+      'color: default',
       'color: yellow'
     );
   }
