@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/TheDolentCity/cerberus">
-    <img src="docs/images/logo.png" alt="Logo" width="512" height="512">
+    <img src="docs/images/logo.png" alt="Logo" width="256" height="256">
   </a>
   <h3 align="center">Cerberus</h3>
   <p align="center">
@@ -27,9 +27,8 @@
 </details>
 
 ## About The Project
-![Cerberus System Diagram](docs/images/Cerberus-SystemLandscape.png)
-
 Cerberus is a serverless microservice that polls a list of RSS/ATOM feeds for new entries and posts them to users via Discord.
+![Cerberus System Diagram](docs/images/Cerberus-SystemLandscape.png)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
