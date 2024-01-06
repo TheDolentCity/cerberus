@@ -10,7 +10,7 @@
   <p align="center">
     Serverless "Watchdog" for RSS/ATOM/JSON feeds that pushes new entries to a discord server. Hosted on Deno Deploy. CLI manages the service configuration.
     <br />
-    <a href="https://github.com/TheDolentCity/cerberus/docs"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/TheDolentCity/cerberus/docs/architecture"><strong>Explore the docs »</strong></a>
   </p>
 </div>
 
@@ -27,19 +27,19 @@
 </details>
 
 ## About The Project
-[![Cerberus System Diagram][docs/images/Cerberus-SystemLandscape.png]](docs/images/architecture)
+![Cerberus System Diagram](docs/images/Cerberus-SystemLandscape.png)
 
 Cerberus is a serverless microservice that polls a list of RSS/ATOM feeds for new entries and posts them to users via Discord.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Built With
-- [![TypeScript][TypeScript]][https://www.typescriptlang.org/]
-- [![Redis][Redis]][https://redis.io/]
-- [![Deno][Deno]][https://deno.com/]
-- [![Deno Deploy][Deno Deploy]][https://deno.com/deploy]
-- [![Upstash][Upstash]][https://upstash.com/]
-- [![Discord Webhooks][Discord Webhooks]][https://discord.com/developers/docs/resources/webhook]
+- [TypeScript](https://www.typescriptlang.org/)
+- [Redis](https://redis.io/)
+- [Deno](https://deno.com/)
+- [Deno Deploy](https://deno.com/deploy)
+- [Upstash](https://upstash.com/)
+- [Discord Webhooks](https://discord.com/developers/docs/resources/webhook)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
